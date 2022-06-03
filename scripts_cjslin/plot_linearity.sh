@@ -1,0 +1,31 @@
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v1.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v1.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v2.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v2.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v3.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v3.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v4.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v4.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v5.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v5.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v6.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v6.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v7.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v7.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v8.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v8.png
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v9.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v9.png
+
+
+python3 calc_linearity_sine.py Sinusoid_147p461KHz_NomRefV_2M_v10.txt 
+mv temp.png Sinusoid_147p461KHz_NomRefV_2M_v10.png
