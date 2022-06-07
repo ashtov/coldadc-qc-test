@@ -7,11 +7,17 @@
 import os
 import subprocess
 import time
+#import binascii
+#import sys
+#import serial
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import RPi.GPIO as GPIO
 import spidev
+#import writeCtrlReg
+#import readCtrlReg
+#from test_equipment.srs_ds360 import SRS_DS360
 
 def calc_linearity(Codes16):
     '''calc_linearity(Codes16) -> (code, dnl, inlNorm, midADCmean, midADCstd

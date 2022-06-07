@@ -259,20 +259,20 @@ class GUI_WINDOW(Frame):
 
     def run_1ch(self): 
         self.gen_onoff('ON')
-        sleep (2)
+        sleep (1)
         self.status_label.config(text="Running Single Channel")
         os.system('/home/dune/ColdADC/coldadc_qc_test/plotRamp.py')
         self.gen_onoff('OFF')
-        sleep (2)
+        sleep (1)
         self.status_label.config(text="1Ch Dynamic Test DONE")
 
     def run_16ch(self): 
         self.gen_onoff('ON')
-        sleep (2)
+        sleep (1)
         self.status_label.config(text="Running 16 Channels")
         os.system('{}/qc_fft_enob.py'.format(self.soft_dir))
         self.gen_onoff('OFF')
-        sleep (2)
+        sleep (1)
         self.status_label.config(text="16Ch Dynamic Test DONE")
 
     def run_linearity(self, dirsave='.', asicID=''):
@@ -283,22 +283,15 @@ class GUI_WINDOW(Frame):
         gport = qc_dnl_inl_newer.initGPIOpoll(self.FPGA_FIFO_FULL)
         rawLinData = qc_dnl_inl_newer.readNSamp( \
                 gport, spi, self.FPGA_FIFO_FULL, self.NWORDFIFO, self.DNLSamples)
-        print(rawLinData)
-        np.savetxt(f'fast_deserialize_test/rawLinData_{asicID}.csv', rawLinData, fmt='%d', delimiter=',')
+        #print(rawLinData)
+        #np.savetxt(f'fast_deserialize_test/rawLinData_{asicID}.csv', rawLinData, fmt='%d', delimiter=',')
         qc_dnl_inl_newer.calc_plot_dnl_inl(rawLinData, dirsave, asicID, self.DNLSamples)
-        print('test1')
         del rawLinData
-        print('test2')
         spi.close()
-        print('test3')
         gport.cleanup
-        print('test4')
         self.status_label.config(text="INL and DNL DONE")
-        print('test5')
         self.gen_onoff('OFF')
-        print('test6')
         sleep (1)
-        print('test7')
 
 ########## QC Procedure Method #####################################
 
@@ -529,7 +522,7 @@ class GUI_WINDOW(Frame):
 
                 print("Correction: {:2.3}; Old reg value {}; New regs value: {}\n".format(corrVal, hex(old_regval), hex(new_regval)))
                 writeReg_i2c(1, int(self.vinit_regs[i])+128, hex(new_regval))
-                sleep(2)
+                sleep(0.5)
                 
                 readV = 0.3
                 count = 0

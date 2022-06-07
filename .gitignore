@@ -3,6 +3,7 @@
 *.csv
 *.txt
 *\~
+*.bin
 
 # from here: GitHub default .gitignore for "Python"
 # Byte-compiled / optimized / DLL files
