@@ -72,7 +72,8 @@ class GUI_WINDOW(Frame):
     sinit_regs    = [0, 1, 4, 9, 31, 31, 41]
 
     vinit_vals_rt = ['0xce', '0x2b', '0x7d', '0x5c']  # VDDA = 2.4V
-    vinit_vals_ln = ['0xda', '0x32', '0x86', '0x64']  # VDDA = 2.3V
+    #vinit_vals_ln = ['0xda', '0x32', '0x86', '0x64']  # VDDA = 2.3V
+    vinit_vals_ln = ['0xdc', '0x31', '0x87', '0x64']  # VDDA = 2.3V
     ref_volts     = [1.95, 0.45, 1.2, 0.9]
     ref_volts_regs= ['0b1101', '0b10001', '0b1001', '0b101']
 
@@ -216,7 +217,7 @@ class GUI_WINDOW(Frame):
 
         self.set_regcom('I2C')
         writeReg_i2c(2, 2, '0x05')
-        sleep (0.5)
+        #sleep (0.5)
         if (str(hex(readReg_i2c(2, 2)))!='0x5'):
             messagebox.showinfo(title="Failed", message="FAILED setting register 2 page 2!")
             return
@@ -277,7 +278,7 @@ class GUI_WINDOW(Frame):
 
     def run_linearity(self, dirsave='.', asicID=''):
         self.gen_onoff('ON')
-        sleep (1)
+        sleep (2)
         self.status_label.config(text="Running INL and DNL")
         spi = qc_dnl_inl_newer.initSPI()
         gport = qc_dnl_inl_newer.initGPIOpoll(self.FPGA_FIFO_FULL)
@@ -291,7 +292,7 @@ class GUI_WINDOW(Frame):
         gport.cleanup
         self.status_label.config(text="INL and DNL DONE")
         self.gen_onoff('OFF')
-        sleep (1)
+        #sleep (1)
 
 ########## QC Procedure Method #####################################
 
@@ -354,6 +355,7 @@ class GUI_WINDOW(Frame):
         reportFile.write("Soft Reset Test: {}\n\n".format(runsoftrst))
 
 #        if (abs(float(self.read_vdda('v')))==0):
+        '''
         if (self.ps_interface.get_on_off(self.vdda_ps_chan) == False):
 
 
@@ -371,17 +373,21 @@ class GUI_WINDOW(Frame):
                 messagebox.showinfo(title="Warning", message="High VDDA power comsumption("+str(elf.read_vdda('p'))+")")
             self.vdda_onoff('OFF')
         else:
-            print("External VDDA Voltage: {} V\n".format(self.read_vdda('v')))
-            reportFile.write("External VDDA Voltage: {} V\n\n".format(self.read_vdda('v')))
-            print("External VDDA Power DIFF: {} W\n".format(self.read_vdda('p')))
-            reportFile.write("External VDDA Power DIFF: {} W\n\n".format(self.read_vdda('p')))
-            if float(self.read_vdda('p'))>0.4:
-                messagebox.showinfo(title="Warning", message="High VDDA power comsumption("+str(elf.read_vdda('p'))+")")
-            self.sel_se_diff('SE')
-            print("External VDDA Power SE mode: {} W\n\n".format(self.read_vdda('p')))
-            if float(self.read_vdda('p'))>0.4:
-                messagebox.showinfo(title="Warning", message="High VDDA power comsumption("+str(elf.read_vdda('p'))+")")
-            reportFile.write("External VDDA Power SE mode: {} W\n\n".format(self.read_vdda('p')))
+        '''
+        v = float(self.read_vdda('v'))
+        print(f"External VDDA Voltage: {v} V\n")
+        reportFile.write(f"External VDDA Voltage: {v} V\n\n")
+        p = float(self.read_vdda('p'))
+        print(f"External VDDA Power DIFF: {p} W\n")
+        reportFile.write(f"External VDDA Power DIFF: {p} W\n\n")
+        if p > 0.4:
+            messagebox.showinfo(title="Warning", message="High VDDA power comsumption("+str(p)+")")
+        self.sel_se_diff('SE')
+        p = float(self.read_vdda('p'))
+        print(f"External VDDA Power SE mode: {p} W\n\n")
+        reportFile.write(f"External VDDA Power SE mode: {p} W\n\n")
+        if p > 0.4:
+            messagebox.showinfo(title="Warning", message="High VDDA power comsumption("+str(p)+")")
        
         self.sel_se_diff('DIFF')
         print(self.dirsave, filename)
@@ -398,7 +404,6 @@ class GUI_WINDOW(Frame):
         v_ps_noise = 5.0
         ############# Turn off the generator
         self.gen_onoff('OFF')
-        sleep(1)
         messagebox.showinfo(title="Action Needed", message="Please move the jumper boards for noise measurement and click OK when ready.")
 
         ############# Set voltage and turn on PS channel2
@@ -420,7 +425,6 @@ class GUI_WINDOW(Frame):
  
         ############ Turn off PS channel 2
         self.ps_interface.off(ps_chan)
-        sleep(1)
 
         messagebox.showinfo(title="Action Needed", message="Please move the jumper boards for generator and click OK when ready.")
 
@@ -450,7 +454,6 @@ class GUI_WINDOW(Frame):
             return
 
         self.gen_onoff('OFF')
-        sleep(1)
         self.status_label.config(text="QC Test DONE")
         messagebox.showinfo(title="Information", message="ColdADC QC Test Has Finished")
         self.ldo_off()
@@ -495,11 +498,18 @@ class GUI_WINDOW(Frame):
 ########## Method for Iterative Setup of ColdADC Reference Voltages ##########
 
     def set_ref_voltages(self):
+        # trying different thing
+        if self.temp_val.get() == 2:
+            vdda_ps = self.vdda_ps_ln
+        else:
+            vdda_ps = self.vdda_ps_rt
+        # end new thing
         self.set_regcom('I2C')
         outLine = "Register,  Reg Value, Meas Voltage (V)\n"
         for i in range(len(self.vinit_regs)):
             writeReg_i2c(1, int(47)+128, self.ref_volts_regs[i])
-            sleep (0.5)
+            sleep(1)
+            #sleep (0.5)
             curr_volt = 0
             corrVal = 5
     
@@ -514,7 +524,8 @@ class GUI_WINDOW(Frame):
                     if count > 4:
                         break
 
-                corrVal = (self.ref_volts[i] - curr_volt)/self.vdda_ps_ln*256
+                #corrVal = (self.ref_volts[i] - curr_volt)/self.vdda_ps_ln*256
+                corrVal = (self.ref_volts[i] - curr_volt)/vdda_ps*256
                 old_regval = readReg_i2c(1, int(self.vinit_regs[i])+128)
 
                 new_regval = (int(old_regval)+int(corrVal))
@@ -522,8 +533,9 @@ class GUI_WINDOW(Frame):
 
                 print("Correction: {:2.3}; Old reg value {}; New regs value: {}\n".format(corrVal, hex(old_regval), hex(new_regval)))
                 writeReg_i2c(1, int(self.vinit_regs[i])+128, hex(new_regval))
-                sleep(0.5)
+                #sleep(0.5)
                 
+                '''why is this here???
                 readV = 0.3
                 count = 0
                 while readV>0.2:
@@ -533,6 +545,7 @@ class GUI_WINDOW(Frame):
                     count += 1
                     if count > 4:
                         break
+                '''
                             
             print('Current reading: {}V'.format(curr_volt))
             if(i==0): 
@@ -557,7 +570,8 @@ class GUI_WINDOW(Frame):
         self.set_regcom('I2C')
         for i in range(len(self.vinit_regs)):
             writeReg_i2c(1, int(47)+128, self.ref_volts_regs[i])
-            sleep (0.5)
+            sleep(1)
+            #sleep (0.5)
             curr_volt = 0
 
             readV = 0.3
@@ -641,11 +655,9 @@ class GUI_WINDOW(Frame):
 ############ External VDDA Setup Methods #############################
 
     def set_vdda(self, vdda_u = None):
-
-        self.vdda_onoff('OFF')
-
+        '''Sets external power supply VDDA'''
+        #self.vdda_onoff('OFF')
         vdda_ps = self.vdda_ps_rt
-        
         if not self.vddaampl_entry.get():
             if self.temp_val.get()==1:    
                 vdda_ps = self.vdda_ps_rt
@@ -656,12 +668,9 @@ class GUI_WINDOW(Frame):
                 vdda_ps = self.vdda_ps_rt
             else:
                 vdda_ps=float(self.vddaampl_entry.get())
-
         if (vdda_u != None and float(vdda_u)>0 and float(vdda_u)<3):
             vdda_ps = vdda_u
-
         print("Ext VDDA PS set to: {}".format(vdda_ps))
-
         self.ps_interface.set_channel(self.vdda_ps_chan, float(vdda_ps), None, None, float(0.5))
         return
 
@@ -726,20 +735,21 @@ class GUI_WINDOW(Frame):
             self.test_mode.config(text="TEST MODE: DIFFERENTIAL")
             for i in range(len(self.sinit_regs)):
                 writeReg_i2c(1, int(self.sinit_regs[i])+128, self.sinit_vals_di[i])
-                sleep (0.5)
+                #sleep (0.5)
             self.mode_val.set(1)
         elif(sig_mode == 2 or inp_s == 'SE'):
             self.test_mode.config(text="TEST MODE: SINGLE-ENDED")
             for i in range(len(self.sinit_regs)):
                 writeReg_i2c(1, int(self.sinit_regs[i])+128, self.sinit_vals_se[i])
-                sleep (0.5)
+                #sleep (0.5)
             self.mode_val.set(2)
 
 
 ############# Initialization of Test Board and ColdADC #########################
 
     def init_board_i2c(self):
-
+        self.init_board_qc()
+        '''
         self.ldo_off()
         sleep (1)
         os.system('/home/dune/ColdADC/coldadc_qc_test/coldADC_resetFPGA.py')
@@ -756,7 +766,7 @@ class GUI_WINDOW(Frame):
             self.test_temp.config(text="TEMP: ROOM")
             for i in range(len(self.vinit_regs)):
                 writeReg_i2c(1, int(self.vinit_regs[i])+128, self.vinit_vals_rt[i])
-                sleep (0.5)
+                #sleep (0.5)
         elif(self.temp_val.get()==2):
             self.test_mode.config(text="TEMP: LN2")
             os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_i2c_VDDA_off.py')
@@ -767,7 +777,8 @@ class GUI_WINDOW(Frame):
             sleep (1)
             for i in range(len(self.vinit_regs)):
                 writeReg_i2c(1, int(self.vinit_regs[i])+128, self.vinit_vals_ln[i])
-                sleep (0.5)
+                #sleep (0.5)
+        '''
 
         self.meas_ref_voltages()
         #self.set_ref_voltages()
@@ -776,12 +787,12 @@ class GUI_WINDOW(Frame):
             self.test_mode.config(text="TEST MODE: DIFFERENTIAL")
             for i in range(len(self.sinit_regs)):
                 writeReg_i2c(1, int(self.sinit_regs[i])+128, self.sinit_vals_di[i])
-                sleep (0.5)
+                #sleep (0.5)
         elif(self.mode_val.get()==2):
             self.test_mode.config(text="TEST MODE: SINGLE-ENDED")
             for i in range(len(self.sinit_regs)):
                 writeReg_i2c(1, int(self.sinit_regs[i])+128, self.sinit_vals_se[i])
-                sleep (0.5)
+                #sleep (0.5)
 
         self.power_check.deselect()
         self.warmonly_check.deselect()
@@ -792,56 +803,44 @@ class GUI_WINDOW(Frame):
         self.noistest_button["state"]  = "normal"
         self.linrtest_button["state"]  = "normal"
         self.readreg_button["state"]   = "normal"
-        self.qctest_button["state"]    = "normal"
+        #self.qctest_button["state"]    = "normal"
         self.setvdda_button["state"]   = "normal"
         self.regcom_button["state"]    = "normal"
         self.resettest_button["state"] = "normal"
         self.readcal_button["state"]   = "normal"
         self.measrefv_button["state"]  = "normal"
         self.adjrefv_button["state"]   = "normal"
-        self.gen_onoff('OFF')
-        self.read_vdda('v')
+        #self.gen_onoff('OFF')
 
    
     def init_board_qc(self):
-
         self.ps_interface.off(self.vdda_ps_chan)
         sleep (1)        
-        oscommand = "/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_ldo_off.py"
+        os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_ldo_off.py')
         sleep (1)
         os.system('/home/dune/ColdADC/coldadc_qc_test/coldADC_resetFPGA.py')
         sleep (1)
-        oscommand = "/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_ldo_on.py"
+        os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_ldo_on.py')
         sleep (1)
-        os.system(oscommand)
         os.system('/home/dune/ColdADC/coldadc_qc_test/coldADC_resetADC_i2c.py')
         sleep (1)
         self.set_regcom('I2C')
-
-
-        if(self.temp_val.get()==1):
+        os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_i2c_VDDA_off.py')
+        sleep (1)
+        #self.set_vdda(float(self.vdda_ps_rt))
+        #self.vdda_onoff('ON')
+        self.set_vdda()     # it should autodetect temp
+        self.ps_interface.on(self.vdda_ps_chan)
+        sleep (1)
+        if self.temp_val.get() == 1:
             self.test_temp.config(text="TEMP: ROOM")
-            os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_i2c_VDDA_off.py')
-            sleep (1)
-            self.set_vdda(float(self.vdda_ps_rt))
-            sleep (1)
-            self.vdda_onoff('ON')
-            sleep (1)
-            for i in range(len(self.vinit_regs)):
-                writeReg_i2c(1, int(self.vinit_regs[i])+128, self.vinit_vals_rt[i])
-                sleep (0.5)
-        elif(self.temp_val.get()==2):
+            init_vals = self.vinit_vals_rt
+        else:
             self.test_mode.config(text="TEMP: LN2")
-            os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_i2c_VDDA_off.py')
-            sleep (1)
-            self.set_vdda(float(self.vdda_ps_ln))
-            sleep (1)
-            self.vdda_onoff('ON')
-            sleep (1)
-            for i in range(len(self.vinit_regs)):
-                writeReg_i2c(1, int(self.vinit_regs[i])+128, self.vinit_vals_ln[i])
-                sleep (0.5)
-
+            init_vals = self.vinit_vals_ln
+        for i in range(len(self.vinit_regs)):
+            writeReg_i2c(1, int(self.vinit_regs[i])+128, init_vals[i])
+        self.read_vdda('v')
 
 
     def init_board_uart(self):
@@ -889,7 +888,7 @@ class GUI_WINDOW(Frame):
         self.noistest_button["state"]  = "normal"
         self.linrtest_button["state"]  = "normal"
         self.readreg_button["state"]   = "normal"
-        self.qctest_button["state"]    = "normal"
+        #self.qctest_button["state"]    = "normal"
         self.setvdda_button["state"]   = "normal"
         self.regcom_button["state"]    = "normal"
         self.resettest_button["state"] = "normal"
@@ -922,7 +921,7 @@ class GUI_WINDOW(Frame):
         self.readreg_button["state"]   = "disabled"
         self.readreg_button["state"]   = "disabled"
         self.reset_button["state"]     = "disabled"
-        self.qctest_button["state"]    = "disabled"
+        #self.qctest_button["state"]    = "disabled"
         self.setvdda_button["state"]   = "disabled"
         self.regcom_button["state"]    = "disabled"
         self.resettest_button["state"] = "disabled"
@@ -931,7 +930,7 @@ class GUI_WINDOW(Frame):
         self.adjrefv_button["state"]   = "disabled"
         self.reset_check.deselect()
         self.warmonly_check.deselect()
-        self.gen_onoff('OFF')
+        #self.gen_onoff('OFF')
         self.read_vdda('v')
 
     def define_test_details_column(self):
@@ -1280,7 +1279,7 @@ class GUI_WINDOW(Frame):
         self.noistest_button["state"] = "disabled"
         self.linrtest_button["state"] = "disabled"
         self.readreg_button["state"] = "disabled"
-        self.qctest_button["state"] = "disabled"
+        #self.qctest_button["state"] = "disabled"
         self.setvdda_button["state"] = "disabled"
         self.regcom_button["state"] = "disabled"
         self.resettest_button["state"] = "disabled"
