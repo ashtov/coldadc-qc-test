@@ -89,7 +89,7 @@ def calc_plot_dnl_inl(indata, dirsave=None, asicID='', NumSet=480):
 
     print('Writing raw data to temp file . . .')
     indata.tofile('rawLinData.bin', sep='')
-    subprocess.run(['./deserialize', 'rawLinData.bin', 'LinData.bin'])
+    subprocess.run(['./deserialize', 'rawLinData.bin', 'LinData.bin', str(NumSet)])
     print('Reading deserialized data . . .')
     # array formatted for further processing
     y = np.fromfile('LinData.bin', dtype=np.uint16).reshape(NTimeStp, NChan)

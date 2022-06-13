@@ -433,12 +433,14 @@ class GUI_WINDOW(Frame):
 
             # Differential mode
             self.sel_se_diff('DIFF')
+            writeReg_i2c(2, 1, '0b01100')
             sleep(1)
             self.run_linearity(self.dirsave, filename + '_DIFF')
             #############  Single-Ended Mode
             self.sel_se_diff('SE')
             sleep(1)
             self.run_linearity(self.dirsave, filename + '_SE')
+            writeReg_i2c(2, 1, '0b10000')
 
         ############## Measure ENOB, SNR, THD, etc.
         self.sel_se_diff('DIFF')
@@ -817,7 +819,7 @@ class GUI_WINDOW(Frame):
         self.ps_interface.off(self.vdda_ps_chan)
         sleep (1)        
         os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_ldo_off.py')
-        sleep (1)
+        sleep (3)
         os.system('/home/dune/ColdADC/coldadc_qc_test/coldADC_resetFPGA.py')
         sleep (1)
         os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_ldo_on.py')
