@@ -277,6 +277,7 @@ class GUI_WINDOW(Frame):
         self.status_label.config(text="16Ch Dynamic Test DONE")
 
     def run_linearity(self, dirsave='.', asicID=''):
+        writeReg_i2c(2, 1, '0b01100')
         self.gen_onoff('ON')
         sleep (2)
         self.status_label.config(text="Running INL and DNL")
@@ -292,6 +293,7 @@ class GUI_WINDOW(Frame):
         gport.cleanup
         self.status_label.config(text="INL and DNL DONE")
         self.gen_onoff('OFF')
+        writeReg_i2c(2, 1, '0b10000')
         #sleep (1)
 
 ########## QC Procedure Method #####################################
@@ -433,14 +435,10 @@ class GUI_WINDOW(Frame):
 
             # Differential mode
             self.sel_se_diff('DIFF')
-            writeReg_i2c(2, 1, '0b01100')
-            sleep(1)
             self.run_linearity(self.dirsave, filename + '_DIFF')
             #############  Single-Ended Mode
             self.sel_se_diff('SE')
-            sleep(1)
             self.run_linearity(self.dirsave, filename + '_SE')
-            writeReg_i2c(2, 1, '0b10000')
 
         ############## Measure ENOB, SNR, THD, etc.
         self.sel_se_diff('DIFF')
