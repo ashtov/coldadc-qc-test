@@ -69,8 +69,7 @@ class GUI_WINDOW(Frame):
     srs_interface = None
     srs_interface = SRS_DS360()
     vinit_regs    = [24, 25, 26, 27]
-    #sinit_regs    = [0, 1, 4, 9, 31, 31, 41]
-    sinit_regs    = [0, 1, 4, 9, 41]
+    sinit_regs    = [0, 1, 4, 9, 31, 31, 41]
 
     vinit_vals_rt = ['0xce', '0x2b', '0x7d', '0x5c']  # VDDA = 2.4V
     #vinit_vals_ln = ['0xda', '0x32', '0x86', '0x64']  # VDDA = 2.3V
@@ -78,11 +77,8 @@ class GUI_WINDOW(Frame):
     ref_volts     = [1.95, 0.45, 1.2, 0.9]
     ref_volts_regs= ['0b1101', '0b10001', '0b1001', '0b101']
 
-    sinit_vals_di = ['0xa3', '0x0', '0x33', '0b1000', '0x1']
-    sinit_vals_se = ['0x63', '0x0', '0x3b', '0b1000', '0x1']    
-
-    autocalib_regs = [31, 31]
-    autocalib_vals = ['0x3', '0x0']
+    sinit_vals_di = ['0xa3', '0x0', '0x33', '0b1000', '0x3', '0x0', '0x1']
+    sinit_vals_se = ['0x63', '0x0', '0x3b', '0b1000', '0x3', '0x0', '0x1']    
 
     vdda_ps_ln    = 2.3
     vdda_ps_rt    = 2.5
@@ -314,7 +310,6 @@ class GUI_WINDOW(Frame):
         ############ Power Cycle and Initialize the ASIC
         self.init_board_qc()
         self.sel_se_diff('DIFF')
-        self.run_autocalib()
 
         if(self.temp_val.get()==1):
             qc_temp = 'ROOM'
@@ -749,10 +744,6 @@ class GUI_WINDOW(Frame):
                 #sleep (0.5)
             self.mode_val.set(2)
 
-    def run_autocalib(self):
-        for i in range(len(self.autocalib_regs)):
-            writeReg_i2c(1, int(self.autocalib_regs[i])+128, self.autocalib_vals[i])
-            sleep(0.5)
 
 ############# Initialization of Test Board and ColdADC #########################
 

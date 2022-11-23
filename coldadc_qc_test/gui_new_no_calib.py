@@ -900,7 +900,7 @@ class GUI_WINDOW(Frame):
 
     def ena_disa(self):
         if(self.powercheck.get()):self.prepare_button.config(state="normal")
-        else:self.prepare_button.config(state="disabled")
+        else:self.prepare_button.config(state="normal")
 
         if(self.resetcheck.get()):self.reset_button.config(state="normal")
         else:self.reset_button.config(state="disable")
@@ -914,21 +914,21 @@ class GUI_WINDOW(Frame):
         os.system(oscommand)
         sleep (2)
 
-        self.readtest_button["state"]  = "disabled"
-        self.chantest_button["state"]  = "disabled"
-        self.ch16test_button["state"]  = "disabled"
-        self.noistest_button["state"]  = "disabled"
-        self.linrtest_button["state"]  = "disabled"
-        self.readreg_button["state"]   = "disabled"
-        self.readreg_button["state"]   = "disabled"
-        self.reset_button["state"]     = "disabled"
-        #self.qctest_button["state"]    = "disabled"
-        self.setvdda_button["state"]   = "disabled"
-        self.regcom_button["state"]    = "disabled"
-        self.resettest_button["state"] = "disabled"
-        self.readcal_button["state"]   = "disabled"
-        self.measrefv_button["state"]  = "disabled"
-        self.adjrefv_button["state"]   = "disabled"
+        self.readtest_button["state"]  = "normal"
+        self.chantest_button["state"]  = "normal"
+        self.ch16test_button["state"]  = "normal"
+        self.noistest_button["state"]  = "normal"
+        self.linrtest_button["state"]  = "normal"
+        self.readreg_button["state"]   = "normal"
+        self.readreg_button["state"]   = "normal"
+        self.reset_button["state"]     = "normal"
+        #self.qctest_button["state"]    = "normal"
+        self.setvdda_button["state"]   = "normal"
+        self.regcom_button["state"]    = "normal"
+        self.resettest_button["state"] = "normal"
+        self.readcal_button["state"]   = "normal"
+        self.measrefv_button["state"]  = "normal"
+        self.adjrefv_button["state"]   = "normal"
         self.reset_check.deselect()
         self.warmonly_check.deselect()
         #self.gen_onoff('OFF')
@@ -1020,7 +1020,7 @@ class GUI_WINDOW(Frame):
 
         self.ch16test_button = Button(self,text="16Ch Dynamic Test", command=self.run_16ch, width=20)
         self.ch16test_button.grid(row=55,column=columnbase+0)
-#        self.current_entry = Entry(self,width=25,state="disabled")
+#        self.current_entry = Entry(self,width=25,state="normal")
 #        self.current_entry.grid(sticky=W,row=105,column=columnbase+1)
 
         self.noistest_button = Button(self, text="Noise Tests", command=self.run_noise, width=20)
@@ -1268,29 +1268,29 @@ class GUI_WINDOW(Frame):
         self.status_label["fg"] = "#000000"
         self.status_label["bg"] = self.bkg_color
 #        self.runid_label["text"] = ""
-        self.prepare_button["state"] = "disabled"
+        self.prepare_button["state"] = "normal"
 #        self.start_button["state"] = "normal"
         self.operator_label["state"] = "normal"
         self.operator_entry["state"] = "normal"
         self.boardid_label["state"] = "normal"
         self.boardid_entry["state"] = "normal"
-        self.readtest_button["state"] = "disabled"
-        self.chantest_button["state"] = "disabled"
-        self.ch16test_button["state"] = "disabled"
-        self.noistest_button["state"] = "disabled"
-        self.linrtest_button["state"] = "disabled"
-        self.readreg_button["state"] = "disabled"
-        #self.qctest_button["state"] = "disabled"
-        self.setvdda_button["state"] = "disabled"
-        self.regcom_button["state"] = "disabled"
-        self.resettest_button["state"] = "disabled"
-        self.readcal_button["state"] = "disabled"
-        self.measrefv_button["state"] = "disabled"
-        self.adjrefv_button["state"] = "disabled"
-#        self.current_label["state"] = "disabled"
+        self.readtest_button["state"] = "normal"
+        self.chantest_button["state"] = "normal"
+        self.ch16test_button["state"] = "normal"
+        self.noistest_button["state"] = "normal"
+        self.linrtest_button["state"] = "normal"
+        self.readreg_button["state"] = "normal"
+        #self.qctest_button["state"] = "normal"
+        self.setvdda_button["state"] = "normal"
+        self.regcom_button["state"] = "normal"
+        self.resettest_button["state"] = "normal"
+        self.readcal_button["state"] = "normal"
+        self.measrefv_button["state"] = "normal"
+        self.adjrefv_button["state"] = "normal"
+#        self.current_label["state"] = "normal"
 #        self.current_entry["state"] = "normal"
 #        self.current_entry.delete(0,END)
-#        self.current_entry["state"] = "disabled"
+#        self.current_entry["state"] = "normal"
         #self.operator_entry.delete(0,END)
         #self.boardid_entry.delete(0,END)
         #print(self.asic_labels)
@@ -1299,7 +1299,7 @@ class GUI_WINDOW(Frame):
             self.asic_labels[i]["state"] = "normal"
             self.asic_entries[i]["state"] = "normal"
             self.asic_entries[i].delete(0,END)
-        self.reset_button["state"] = "disabled"    
+        self.reset_button["state"] = "normal"    
         self.reset_button["bg"] ="#FF9900"
         self.reset_button["activebackground"] ="#FFCF87"
 
