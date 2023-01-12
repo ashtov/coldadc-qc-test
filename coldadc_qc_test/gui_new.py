@@ -313,8 +313,11 @@ class GUI_WINDOW(Frame):
 
         ############ Power Cycle and Initialize the ASIC
         self.init_board_qc()
+        self.read_calib()
         self.sel_se_diff('DIFF')
+        self.read_calib()
         self.run_autocalib()
+        self.read_calib()
 
         if(self.temp_val.get()==1):
             qc_temp = 'ROOM'
@@ -327,6 +330,7 @@ class GUI_WINDOW(Frame):
 
         ############ Adjust Reference Voltages to Default
         refvset = self.set_ref_voltages()  
+        self.read_calib()
 
         messagebox.showinfo(title="Action Needed", message="Please check that both red and green LEDs are ON at the back of the SRS generator. If not, please reconnect the BNC sync cable.")
 
