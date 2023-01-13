@@ -34,6 +34,7 @@ import glob
 import json
 #import pprint
 from time import sleep
+from time import time   # DEBUG
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox 
@@ -58,6 +59,8 @@ import qc_dnl_inl_newer
 #from ...runpolicy import DirectRunner, SumatraRunner
 
 GUITESTMODE=False
+
+MYTIME = 0
 
 
 class GUI_WINDOW(Frame):
@@ -313,9 +316,12 @@ class GUI_WINDOW(Frame):
 
         ############ Power Cycle and Initialize the ASIC
         self.init_board_qc()
-        self.read_calib()
+        #self.read_calib()
+        #sleep(10)
         self.sel_se_diff('DIFF')
-        self.read_calib()
+        #self.read_calib()
+        endtime = time()
+        print(f'TIME ELAPSED: {endtime - MYTIME}')
         self.run_autocalib()
         self.read_calib()
 
@@ -827,6 +833,7 @@ class GUI_WINDOW(Frame):
 
    
     def init_board_qc(self):
+        global MYTIME   # DEBUG
         self.ps_interface.off(self.vdda_ps_chan)
         sleep (1)        
         os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_ldo_off.py')
@@ -834,6 +841,8 @@ class GUI_WINDOW(Frame):
         os.system('/home/dune/ColdADC/coldadc_qc_test/coldADC_resetFPGA.py')
         sleep (1)
         os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_VDDD_on.py')
+        MYTIME = time()
+        sleep(3)   # DEBUG
         sleep (1)
         os.system('/home/dune/ColdADC/coldadc_qc_test/coldADC_resetADC_i2c.py')
         sleep (1)
@@ -842,7 +851,7 @@ class GUI_WINDOW(Frame):
         #self.vdda_onoff('ON')
         self.set_vdda()     # it should autodetect temp
         self.ps_interface.on(self.vdda_ps_chan)
-        sleep (1)
+        #sleep (1)
         if self.temp_val.get() == 1:
             self.test_temp.config(text="TEMP: ROOM")
             init_vals = self.vinit_vals_rt
