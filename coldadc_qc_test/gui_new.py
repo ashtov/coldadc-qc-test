@@ -316,14 +316,14 @@ class GUI_WINDOW(Frame):
 
         ############ Power Cycle and Initialize the ASIC
         self.init_board_qc()
-        #self.read_calib()
+        #self.read_calib()  # 1
         #sleep(10)
         self.sel_se_diff('DIFF')
-        #self.read_calib()
+        #self.read_calib()  # 2
         endtime = time()
         print(f'TIME ELAPSED: {endtime - MYTIME}')
         self.run_autocalib()
-        self.read_calib()
+        self.read_calib()   # 3
 
         if(self.temp_val.get()==1):
             qc_temp = 'ROOM'
@@ -336,7 +336,7 @@ class GUI_WINDOW(Frame):
 
         ############ Adjust Reference Voltages to Default
         refvset = self.set_ref_voltages()  
-        self.read_calib()
+        #self.read_calib()   # 4
 
         messagebox.showinfo(title="Action Needed", message="Please check that both red and green LEDs are ON at the back of the SRS generator. If not, please reconnect the BNC sync cable.")
 
@@ -363,7 +363,7 @@ class GUI_WINDOW(Frame):
         print("Registers Read Test: {}\n".format(readreg))
         reportFile.write("Registers Read Test: {}\n\n".format(readreg))
    
-        readcalib = self.read_calib("{}/ColdADC_{}_calib_const.csv".format(self.dirsave,filename))
+        readcalib = self.read_calib("{}/ColdADC_{}_calib_const.csv".format(self.dirsave,filename))  # 5 (original)
         print("Read Calibration Weights:\n {}\n\n".format(readcalib))
         reportFile.write("Read Calibration Weights: \n {}\n\n".format(readcalib))
      
@@ -842,7 +842,7 @@ class GUI_WINDOW(Frame):
         sleep (1)
         os.system('/home/dune/ColdADC/coldadc_qc_test/enableCMOS_p2/coldADC_VDDD_on.py')
         MYTIME = time()
-        sleep(3)   # DEBUG
+        sleep(4)   # DEBUG
         sleep (1)
         os.system('/home/dune/ColdADC/coldadc_qc_test/coldADC_resetADC_i2c.py')
         sleep (1)
