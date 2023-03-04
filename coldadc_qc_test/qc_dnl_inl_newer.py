@@ -3,6 +3,9 @@
 # Use with deserialize.c and version of gui_new.py with same date.
 # By ashtov 2022-06-01
 
+# Updated with simpler, bug-free calc_linearity
+# By ashtov 2023-03-03
+
 
 import os
 import subprocess
@@ -26,20 +29,24 @@ def calc_linearity(Codes16):
     Somewhat copied from qc_linearity_sine_14bit.py'''
     Codes14 = Codes16 // 4
     sortCodes14 = np.sort(Codes14)
-    minbin = sortCodes14[30]
-    maxbin = sortCodes14[-30]
+    minbin = sortCodes14[0]     # changed from 30 and -30, 2023-03-03
+    maxbin = sortCodes14[-1]
     #yoffset = ((sortCodes14[1] + sortCodes14[-2]) / 2) - 8192
     yoffset = ((sortCodes14[1] + sortCodes14[-2]) // 2) - 8192
     minCodes16 = np.amin(Codes16)
     maxCodes16 = np.amax(Codes16)
-    minCodes14 = np.amin(Codes14)
-    maxCodes14 = np.amax(Codes14)
+    #minCodes14 = np.amin(Codes14)
+    #maxCodes14 = np.amax(Codes14)
+    minCodes14 = minbin
+    maxCodes14 = maxbin
     print("Min/max code, spread (16bit)=", minCodes16, maxCodes16, maxCodes16 - minCodes16)
     print("Min/max code, spread (14bit)=", minCodes14, maxCodes14, maxCodes14 - minCodes14)
     print("Second Min/max code, offset (14bit)=", sortCodes14[1], sortCodes14[-2], yoffset)
     del sortCodes14
 
-    bins = np.append(np.insert(np.arange(minbin, maxbin + 2) - 0.5, 0, 0.0), 16384.5)
+    # more reasonable, 2023-03-03
+    #bins = np.append(np.insert(np.arange(minbin, maxbin + 2) - 0.5, 0, 0.0), 16384.5)
+    bins = np.arange(minbin, maxbin + 2)
 
     h, binedges = np.histogram(Codes14, bins)
     midADCmean = np.mean(h[7500:8200])
@@ -61,7 +68,8 @@ def calc_linearity(Codes16):
     inlNorm = inl - np.mean(inl)
     #code = np.linspace(minbin + TRUNC, maxbin - TRUNC, np.size(dnl)).astype(int)    # should be arange maybe???
     #code = np.arange(minbin + TRUNC, maxbin - TRUNC + 1)
-    code = np.linspace(minbin + TRUNC, maxbin - TRUNC, np.size(dnl)).astype(np.uint16)
+    #code = np.linspace(minbin + TRUNC, maxbin - TRUNC, np.size(dnl)).astype(np.uint16)
+    code = bins[TRUNC:-TRUNC - 1]
     print(f"Range of code: {minbin + TRUNC} - {maxbin - TRUNC}, difference: {maxbin - TRUNC - (minbin + TRUNC)}\nSize of 'code': {np.size(code)}")
 
     #return {'code': code, 'dnl': dnl, 'inlNorm': inlNorm, 'midADCmean': midADCmean, 'midADCstd': midADCstd}

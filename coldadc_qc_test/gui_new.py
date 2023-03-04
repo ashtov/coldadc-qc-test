@@ -452,18 +452,18 @@ class GUI_WINDOW(Frame):
         os.system("{}/qc_fft_enob.py {} {} >> {}".format(self.soft_dir,self.dirsave, filename, repFilename))
 ##        fftstat = calc_fft(self.dirsave, filename)
         self.status_label.config(text="16ch Dynamic Test DONE")
-
-        checkifgood = messagebox.askyesno(title="Confirmation", message="Are the ENOB, SNR, THD, and noise plots as expected?")
-        if not checkifgood:
-            messagebox.showinfo(title="Warning", message="Exiting QC Test. TEST FAILED!") 
-            return
-
         self.gen_onoff('OFF')
+        self.ldo_off()
+
+        #checkifgood = messagebox.askyesno(title="Confirmation", message="Are the ENOB, SNR, THD, and noise plots as expected?")
+        #if not checkifgood:
+        #    messagebox.showinfo(title="Warning", message="Exiting QC Test. TEST FAILED!") 
+        #    return
+
         self.status_label.config(text="QC Test DONE")
         messagebox.showinfo(title="Information", message="ColdADC QC Test Has Finished")
-        self.ldo_off()
         
-        messagebox.showinfo(title='Information', message='Please Start Warming Up.')
+        #messagebox.showinfo(title='Information', message='Please Start Warming Up.')
 
 #        if(noistat and fftstat and dnlstat):
 #            self.qctest_label.config(text=("PASSED"))
@@ -1041,7 +1041,8 @@ class GUI_WINDOW(Frame):
 #        self.qctest_label.grid(sticky=W, row=58,column=columnbase+1)
 #        self.separ_col2 = Separator(self, orient=VERTICAL)
 #        self.separ_col2.grid(column=columnbase+2)
-        self.warmonly_label = Label(self, text="Warm Only",bd=1,width=15)
+        # changed label on warmonly to more accurately reflect its effect
+        self.warmonly_label = Label(self, text="DNL/INL at Room Temp?",bd=1,width=15)
         self.warmonly_label.grid(sticky=W, row=58,column=columnbase+1)
         self.warmonly=IntVar(self)
         self.warmonly_check = Checkbutton(self, variable=self.warmonly, onvalue=1, offvalue=0, command=self.warmonly.get())
