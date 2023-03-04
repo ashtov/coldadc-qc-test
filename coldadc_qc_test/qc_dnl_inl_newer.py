@@ -62,6 +62,7 @@ def calc_linearity(Codes16):
     #code = np.linspace(minbin + TRUNC, maxbin - TRUNC, np.size(dnl)).astype(int)    # should be arange maybe???
     #code = np.arange(minbin + TRUNC, maxbin - TRUNC + 1)
     code = np.linspace(minbin + TRUNC, maxbin - TRUNC, np.size(dnl)).astype(np.uint16)
+    print(f"Range of code: {minbin + TRUNC} - {maxbin - TRUNC}, difference: {maxbin - TRUNC - (minbin + TRUNC)}\nSize of 'code': {np.size(code)}")
 
     #return {'code': code, 'dnl': dnl, 'inlNorm': inlNorm, 'midADCmean': midADCmean, 'midADCstd': midADCstd}
     #return pd.Series([code, dnl, inlNorm, midADCmean, midADCstd])
