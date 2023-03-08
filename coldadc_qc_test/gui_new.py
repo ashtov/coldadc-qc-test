@@ -1042,7 +1042,7 @@ class GUI_WINDOW(Frame):
 #        self.separ_col2 = Separator(self, orient=VERTICAL)
 #        self.separ_col2.grid(column=columnbase+2)
         # changed label on warmonly to more accurately reflect its effect
-        self.warmonly_label = Label(self, text="DNL/INL at Room Temp?",bd=1,width=15)
+        self.warmonly_label = Label(self, text="DNL/INL at RT",bd=1,width=18)
         self.warmonly_label.grid(sticky=W, row=58,column=columnbase+1)
         self.warmonly=IntVar(self)
         self.warmonly_check = Checkbutton(self, variable=self.warmonly, onvalue=1, offvalue=0, command=self.warmonly.get())
